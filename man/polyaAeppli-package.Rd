@@ -13,8 +13,8 @@ Functions for evaluating the mass density, cumulative distribution function, qua
 \tabular{ll}{
 Package: \tab polyaAeppli\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2013-11-13\cr
+Version: \tab 2.0\cr
+Date: \tab 2014-03-14\cr
 License: \tab GPL(>=2)\cr
 }
 Consistent with the conventions used in R package stats, this implementation of the Polya-Aeppli distribution comprises the four functions \cr

@@ -1,3 +1,4 @@
+########################################################################################
 #
 #	Implementation of Polya-Aeppli distribution (also known as geometric-Poisson)
 #
@@ -6,11 +7,12 @@
 #	qPolyaAeppli(p, lambda, prob, lower.tail = TRUE, log.p = FALSE)
 #	rPolyaAeppli(n, lambda, prob)
 #
-#	Conrad Burden	November, 2013
+#	Conrad Burden	March, 2014
 #
 ########################################################################################
 #
-#	Probability density of the Polya-Aeppli distribution
+#
+#	Probability density of the Polya-Aeppli distribution 
 #
 	dPolyaAeppli <- function(x, lambda, prob, log=FALSE){
 		if(!is.numeric(x)){
@@ -19,15 +21,39 @@
 		if(!is.numeric(lambda)){
 			stop("Non-numeric parameter lambda \n")
 			} 
-		if(lambda <= 0){
+		if(any(lambda <= 0)){
 			stop("parameter lambda must be > 0 \n")
 			} 
 		if(!is.numeric(prob)){
 			stop("Non-numeric parameter prob \n")
 			} 
-		if(prob < 0 | prob >=1){
+		if(any(prob < 0 | prob >=1)){
 			stop("parameter prob must be between 0 and 1 \n")
 			}
+#
+#	use dPolyaAeppliSingle() if possible to improve performance
+#
+		if(length(lambda)==1 & length(prob)==1){
+			return(dPolyaAeppliSingle(x, lambda, prob, log))
+			}else{
+			lX <- length(x)
+			lLambda <- length(lambda)
+			lProb <- length(prob)
+			lMax <- max(lX, lLambda, lProb)
+#	
+			xRep <- rep_len(x, length.out=lMax)
+			lambdaRep <- rep_len(lambda, length.out=lMax)
+			probRep <- rep_len(prob, length.out=lMax)
+			return(dPolyaAeppliVec(xRep, lambdaRep, probRep, log))
+			}
+		}
+#
+########################################################################################
+#
+#	Probability density of the Polya-Aeppli distribution 
+#								with single parameters lambda, prob
+#
+	dPolyaAeppliSingle <- function(x, lambda, prob, log=FALSE){
 		if(all(x == Inf)){
 			if(log){
 				return(rep(-Inf, length(x)))
@@ -57,6 +83,15 @@
 #
 ########################################################################################
 #
+#
+#	Probability density of the Polya-Aeppli distribution 
+#								with vector lambda, prob
+#
+	dPolyaAeppliVec <- Vectorize(dPolyaAeppliSingle, c("x", "lambda", "prob"))
+#
+########################################################################################
+#
+#
 #	Cumulative probability function of the Polya-Aeppli distribution
 #
 	pPolyaAeppli <- function(q, lambda, prob, lower.tail=TRUE, log.p=FALSE){
@@ -67,15 +102,40 @@
 		if(!is.numeric(lambda)){
 			stop("Non-numeric parameter lambda \n")
 			} 
-		if(lambda <= 0){
+		if(any(lambda <= 0)){
 			stop("parameter lambda must be > 0 \n")
 			} 
 		if(!is.numeric(prob)){
 			stop("Non-numeric parameter prob \n")
 			} 
-		if(prob < 0 | prob >=1){
+		if(any(prob < 0 | prob >=1)){
 			stop("parameter prob must be between 0 and 1 \n")
-			} 
+			}
+#
+#	use pPolyaAeppliSingle() if possible to improve performance
+#
+		if(length(lambda)==1 & length(prob)==1){
+			return(pPolyaAeppliSingle(x, lambda, prob, lower.tail, log.p))
+			}else{
+			lX <- length(x)
+			lLambda <- length(lambda)
+			lProb <- length(prob)
+			lMax <- max(lX, lLambda, lProb)
+#	
+			xRep <- rep_len(x, length.out=lMax)
+			lambdaRep <- rep_len(lambda, length.out=lMax)
+			probRep <- rep_len(prob, length.out=lMax)
+			return(pPolyaAeppliVec(xRep, lambdaRep, probRep, lower.tail, log.p))
+			}
+		}
+#
+########################################################################################
+#
+#	Cumulative probability function of the Polya-Aeppli distribution
+#								with single parameters lambda, prob
+#
+	pPolyaAeppliSingle <- function(q, lambda, prob, lower.tail=TRUE, log.p=FALSE){
+		x <- q
 		if(all(x == Inf)){
 			if( log.p &  lower.tail){return(rep(0, length(x)))}
 			if(!log.p &  lower.tail){return(rep(1, length(x)))}
@@ -114,6 +174,15 @@
 #
 #######################################################################################
 #
+#
+#	Cumulative probability function of the Polya-Aeppli distribution
+#								with vector lambda, prob
+#
+	pPolyaAeppliVec <- Vectorize(pPolyaAeppliSingle, c("q", "lambda", "prob"))
+#
+########################################################################################
+#
+#
 #	Quantile function of the Polya-Aeppli distribution
 #
 	qPolyaAeppli <- function(p, lambda, prob, lower.tail=TRUE, log.p=FALSE){
@@ -123,15 +192,39 @@
 		if(!is.numeric(lambda)){
 			stop("Non-numeric parameter lambda \n")
 			} 
-		if(lambda <= 0){
+		if(any(lambda <= 0)){
 			stop("parameter lambda must be > 0 \n")
 			} 
 		if(!is.numeric(prob)){
 			stop("Non-numeric parameter prob \n")
 			} 
-		if(prob < 0 | prob >=1){
+		if(any(prob < 0 | prob >=1)){
 			stop("parameter prob must be between 0 and 1 \n")
 			} 
+#
+#	use qPolyaAeppliSingle() if possible to improve performance
+#
+		if(length(lambda)==1 & length(prob)==1){
+			return(qPolyaAeppliSingle(p, lambda, prob, lower.tail, log.p))
+			}else{
+			lP <- length(p)
+			lLambda <- length(lambda)
+			lProb <- length(prob)
+			lMax <- max(lP, lLambda, lProb)
+#	
+			pRep <- rep_len(p, length.out=lMax)
+			lambdaRep <- rep_len(lambda, length.out=lMax)
+			probRep <- rep_len(prob, length.out=lMax)
+			return(qPolyaAeppliVec(pRep, lambdaRep, probRep, lower.tail, log.p))
+			}
+		}
+#
+########################################################################################
+#
+#	Quantile function of the Polya-Aeppli distribution
+#								with single parameters lambda, prob
+#
+	qPolyaAeppliSingle <- function(p, lambda, prob, lower.tail=TRUE, log.p=FALSE){
 #
 		qPolyaAeppli <- array(dim=length(p))
 		needsCalculating <- rep(FALSE, length(p)) 
@@ -207,6 +300,14 @@
 		return(qPolyaAeppli)
 		}
 #
+#######################################################################################
+#
+#
+#	Quantile function of the Polya-Aeppli distribution
+#								with vector lambda, prob
+#
+	qPolyaAeppliVec <- Vectorize(qPolyaAeppliSingle, c("p", "lambda", "prob"))
+#
 ########################################################################################
 #
 #	Generate a random sample from the Polya-Aeppli distribution
@@ -218,19 +319,32 @@
 		if(!is.numeric(lambda)){
 			stop("Non-numeric parameter lambda \n")
 			} 
-		if(lambda <= 0){
+		if(any(lambda <= 0)){
 			stop("parameter lambda must be > 0 \n")
 			} 
 		if(!is.numeric(prob)){
 			stop("Non-numeric parameter prob \n")
 			} 
-		if(prob < 0 | prob >=1){
+		if(any(prob < 0 | prob >=1)){
 			stop("parameter prob must be between 0 and 1 \n")
+			}
+#
+		nn <- n[1]
+		if(nn < 0){
+			stop("parameter n must be non-negative \n")
 			} 
-		rPolyaAeppli <- array(dim=n)
-		for(i in 1:n){
-			nSample <- rpois(1, lambda)
-			rPolyaAeppli[i] <- sum(rgeom(nSample, (1 - prob))) + nSample
+		if(nn == 0) return(integer(0)) 
+#
+		rPolyaAeppli <- array(dim=nn)
+		lambdaRep <- rep_len(lambda, length.out=nn)
+		probRep <- rep_len(prob, length.out=nn)
+#
+#	Sum a Poisson number of (shifted) geometric random numbers.  
+#		The "+ nSample" below takes care of the shift 
+#
+		for(i in 1:nn){
+			nSample <- rpois(1, lambdaRep[i])
+			rPolyaAeppli[i] <- sum(rgeom(nSample, (1 - probRep[i]))) + nSample
 			}
 			rPolyaAeppli
 		}

@@ -31,10 +31,10 @@ vector of probabilities
 number of random variables to return
 }
   \item{lambda}{
-non-negative Poisson parameter
+a vector of non-negative Poisson parameters
 }
   \item{prob}{
-geometric parameter between 0 and 1
+a vector of geometric parameters between 0 and 1
 }
   \item{log, log.p}{
 logical; if TRUE, probabilities p are given as log(p)
