@@ -3,18 +3,20 @@
 \alias{polyaAeppli}
 \docType{package}
 \title{
-The Polya-Aeppli distribution
+Implementation of the Polya-Aeppli Distribution
 }
 \description{
-Functions for evaluating the mass density, cumulative distribution function, quantile function and random variate generation for the Polya-Aeppli distribution, also known as the geometric compound Poisson distribution.
+Functions for evaluating the mass density, cumulative distribution function, quantile function and random variate generation for the Polya-Aeppli distribution, also known as the geometric compound Poisson distribution. \cr
+More information on the implementation of \bold{polyaAeppli} can be found at Conrad J. Burden (2014) <arXiv:1406.2780>.
 }
 
 \details{
 \tabular{ll}{
 Package: \tab polyaAeppli\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2014-03-14\cr
+Version: \tab 2.0.2\cr
+Depends: \tab R (>= 3.0.0)\cr
+Date: \tab 2020-04-21\cr
 License: \tab GPL(>=2)\cr
 }
 Consistent with the conventions used in R package stats, this implementation of the Polya-Aeppli distribution comprises the four functions \cr
